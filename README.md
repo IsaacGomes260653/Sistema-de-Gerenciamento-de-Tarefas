@@ -51,7 +51,7 @@ O **TaskFlow** é um sistema de gerenciamento de tarefas desenvolvido com foco e
 
 ```bash
 # Clone o repositório
-git clone [https://github.com/seu-usuario/taskflow.git](https://github.com/IsaacGomes260653/Sistema-de-Gerenciamento-de-Tarefas/tree/main)
+git clone https://github.com/IsaacGomes260653/Sistema-de-Gerenciamento-de-Tarefas.git
 ```
 
 1. Mova a pasta do projeto para dentro de `htdocs` (XAMPP) ou `www` (WAMP)
