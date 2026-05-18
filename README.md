@@ -45,35 +45,40 @@ O **TaskFlow** é um sistema de gerenciamento de tarefas desenvolvido com foco e
 ## 🚀 Como Executar Localmente
 
 ### Pré-requisitos
-- [XAMPP](https://www.apachefriends.org/) ou outro servidor com PHP e MySQL
+- Instalar o [XAMPP](https://www.apachefriends.org/)
 
 ### Passo a passo
 
-```bash
-# Clone o repositório
-git clone https://github.com/IsaacGomes260653/Sistema-de-Gerenciamento-de-Tarefas.git
-```
-
-1. Mova a pasta do projeto para dentro de `htdocs` (XAMPP) ou `www` (WAMP)
-2. Importe o banco de dados:
-   - Abra o **phpMyAdmin** em `http://localhost/phpmyadmin`
-   - Crie um banco de dados novo (ex: `taskflow`)
-   - Importe o arquivo `banco.sql`
-3. Configure a conexão em `conexao.php` com seus dados:
+1. **Instale o XAMPP** e abra o painel de controle
+2. **Inicie os serviços** clicando em **Start** nos módulos **Apache** e **MySQL**
+3. **Copie a pasta do projeto** (`SGT`) para dentro do diretório:
+   ```
+   C:\xampp\htdocs\
+   ```
+   Ficando assim: `C:\xampp\htdocs\SGT\`
+4. **Importe o banco de dados:**
+   - Abra o navegador e acesse `http://localhost/phpmyadmin`
+   - Clique em **Novo** para criar um banco de dados (ex: `taskflow`)
+   - Com o banco selecionado, clique em **Importar**
+   - Escolha o arquivo `banco.sql` da pasta do projeto e clique em **Executar**
+5. **Verifique a conexão** no arquivo `conexao.php`:
    ```php
    $host = "localhost";
    $banco = "taskflow";
    $usuario = "root";
    $senha = "";
    ```
-4. Acesse no navegador: `http://localhost/A2`
+6. **Acesse o sistema** no navegador:
+   ```
+   http://localhost/SGT
+   ```
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
-A2/
+SGT/
 ├── TAREFA/
 │   ├── concluir.php      # Marca tarefa como concluída
 │   ├── excluir.php       # Remove uma tarefa
@@ -110,4 +115,4 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para 
 
 ---
 
-<p align="center">Feito com 💙 por <strong>Isaac</strong></p>
+<p align="center">Feito com 💙 por <strong>ISAAC</strong></p>
