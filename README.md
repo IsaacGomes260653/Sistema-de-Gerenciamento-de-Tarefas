@@ -3,7 +3,6 @@
 > Aplicação web para gerenciamento pessoal de tarefas com autenticação de usuários e controle de acesso por sessão.
 
 ---
----
 
 ## 📋 Sobre o Projeto
 
