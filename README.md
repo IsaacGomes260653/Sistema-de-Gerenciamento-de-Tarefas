@@ -3,13 +3,6 @@
 > Aplicação web para gerenciamento pessoal de tarefas com autenticação de usuários e controle de acesso por sessão.
 
 ---
-
-## 📸 Preview
-
-| Login | Tarefas |
-|-------|---------|
-| ![Tela de login](./screenshots/login.png) | ![Tela de tarefas](./screenshots/tasks.png) |
-
 ---
 
 ## 📋 Sobre o Projeto
