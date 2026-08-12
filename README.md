@@ -116,3 +116,42 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](./LICENSE) para 
 ---
 
 <p align="center">Feito com 💙 por <strong>ISAAC</strong></p>
+
+---
+
+# ✅ TaskFlow — Task Management System (English)
+
+> Web app for personal task management with user authentication and session-based access control.
+
+## 📋 About
+
+**TaskFlow** is a task management system built with a focus on security and simplicity. Each user has exclusive access to their own tasks, with route protection that blocks access to other users' pages even if the URL is known.
+
+## ✨ Features
+
+User login, route protection against direct-URL access to other users' data, task creation/editing/completion/deletion, automatic creation timestamps, and secure logout.
+
+## 🔒 Security
+
+Each user only sees and manages their own tasks; direct-URL access to other users' resources is blocked; a valid session is required for any operation; unauthenticated users are redirected to login automatically.
+
+## 🛠️ Tech stack
+
+Frontend: HTML, CSS · Backend: PHP · Database: MySQL · Auth: native PHP sessions · Server: Apache (XAMPP/WAMP).
+
+## 🚀 Running it locally
+
+1. Install [XAMPP](https://www.apachefriends.org/).
+2. Start the **Apache** and **MySQL** modules.
+3. Copy the `SGT` folder into `C:\xampp\htdocs\`.
+4. Import `banco.sql` via phpMyAdmin into a new database (e.g. `taskflow`).
+5. Check the credentials in `conexao.php` match your local setup.
+6. Open `http://localhost/SGT` in your browser.
+
+## 📄 License
+
+MIT — see [LICENSE](./LICENSE).
+
+---
+
+<p align="center">Built with 💙 by <strong>ISAAC</strong></p>
