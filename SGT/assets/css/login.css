@@ -1,0 +1,92 @@
+.login-shell {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    padding: var(--space-5);
+}
+
+@media (min-width: 900px) {
+    .login-shell {
+        grid-template-columns: 1.1fr 1fr;
+        padding: 0;
+    }
+}
+
+.login-showcase {
+    display: none;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(160deg, var(--color-primary) 0%, #0f766e 100%);
+    color: #ecfdf9;
+    padding: var(--space-12);
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (min-width: 900px) {
+    .login-showcase { display: flex; }
+}
+
+.login-showcase .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-weight: 700;
+    font-size: var(--text-lg);
+}
+
+.login-showcase .brand .icon { width: 26px; height: 26px; }
+
+.login-showcase h1 {
+    font-size: var(--text-3xl);
+    line-height: var(--leading-tight);
+    max-width: 22ch;
+    font-weight: 700;
+}
+
+.login-showcase p { color: #cdf3ec; max-width: 40ch; }
+
+.login-stats {
+    display: flex;
+    gap: var(--space-8);
+}
+
+.login-stats strong { display: block; font-size: var(--text-2xl); }
+.login-stats span { font-size: var(--text-sm); color: #cdf3ec; }
+
+.login-panel {
+    width: 100%;
+    max-width: 400px;
+    padding: var(--space-6);
+}
+
+.login-panel .brand-mobile {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: var(--space-6);
+}
+
+@media (min-width: 900px) {
+    .login-panel .brand-mobile { display: none; }
+}
+
+.login-panel h2 { font-size: var(--text-2xl); margin-bottom: var(--space-2); }
+.login-panel .subtitle { color: var(--color-text-muted); margin-bottom: var(--space-6); }
+
+.login-footer {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+}
+
+.theme-toggle-floating {
+    position: fixed;
+    top: var(--space-4);
+    right: var(--space-4);
+    z-index: 20;
+}
