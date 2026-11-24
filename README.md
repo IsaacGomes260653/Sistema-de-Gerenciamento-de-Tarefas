@@ -26,3 +26,18 @@
   <a href="#próximos-passos">Próximos passos</a> ·
   <a href="#english-summary">English</a>
 </p>
+
+## Demonstração
+
+<p align="center">
+  <img src=".github/capturas/demo.gif" width="720" alt="Demonstração do TaskFlow: login com o usuário admin; no painel com cinco tarefas, a tarefa Enviar o TCC para a orientadora é criada e aparece o aviso de sucesso; a tarefa Estudar para a prova de Banco de Dados é concluída e os contadores passam a 3 pendentes e 3 concluídas; a busca por tcc deixa só as duas tarefas do TCC, e os filtros Concluídas e Pendentes separam a lista; a tarefa Atualizar o currículo no LinkedIn é excluída pela janela de confirmação; no fim, o botão de tema troca o painel para o tema escuro">
+</p>
+
+Gravado com o Playwright, com o app rodando localmente (`php -S`, PHP 8.4 e MariaDB 11.8) e tarefas de exemplo.
+
+No celular, a tabela vira uma lista de cartões. No tema claro e no escuro:
+
+<p align="center">
+  <img src=".github/capturas/celular-claro.png" width="300" alt="Painel do TaskFlow numa tela de 390 px, no tema claro: a busca, os filtros Todas, Pendentes e Concluídas e as tarefas em cartões, cada um com título, descrição, status, data de criação e os botões de editar e excluir, mais o de concluir nas pendentes">
+  <img src=".github/capturas/celular-escuro.png" width="300" alt="O mesmo painel numa tela de 390 px, no tema escuro: fundo verde-escuro, cartões com borda sutil e os status Pendente em laranja e Concluída em verde">
+</p>
