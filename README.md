@@ -179,3 +179,19 @@ Cada ação confere o token, grava no banco filtrando pelo dono, guarda um aviso
 ```
 
 </details>
+
+## Testes e qualidade
+
+O projeto não tem testes automatizados, lint nem CI. Para este README, conferi tudo a partir de um clone limpo, no terminal e no Chromium, com o Playwright:
+
+- `php -l` nos 22 arquivos PHP, no PHP 8.1 e no 8.4, sem erro;
+- login certo, senha errada e o bloqueio depois de cinco tentativas;
+- criar, editar, concluir e excluir, com a confirmação, os avisos e os contadores; o título vazio é recusado;
+- busca, filtros e o tema claro e escuro;
+- isolamento entre usuários: logado como um segundo usuário, abrir pela URL, editar, concluir e excluir tarefas do `admin` deu "Tarefa não encontrada." nas quatro tentativas, e o banco continuou igual;
+- CSRF: um POST sem o token recebe 419, e um GET no `excluir.php` só volta para o painel;
+- os cabeçalhos de segurança e o cookie de sessão `HttpOnly` e `SameSite=Lax`;
+- o painel numa tela de 390 px, nos dois temas, e o app numa subpasta, como no XAMPP;
+- nenhum erro no console.
+
+Nessa revisão apareceram os problemas que abrem a lista de próximos passos.
