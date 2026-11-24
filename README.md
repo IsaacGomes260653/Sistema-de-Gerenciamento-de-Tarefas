@@ -195,3 +195,25 @@ O projeto não tem testes automatizados, lint nem CI. Para este README, conferi 
 - nenhum erro no console.
 
 Nessa revisão apareceram os problemas que abrem a lista de próximos passos.
+
+## Próximos passos
+
+- [ ] Contar as tentativas de login no banco, por usuário, e não na sessão: quem apaga o cookie zera a contagem e escapa do bloqueio de um minuto.
+- [ ] Tirar do Tab os botões escondidos: com a janela de confirmação e o menu do usuário fechados, o Tab ainda passa por "Cancelar", "Confirmar" e "Sair", que estão invisíveis.
+- [ ] Marcar o botão de tema com o estado certo ao abrir a página: no tema escuro, o `aria-pressed` começa em `false` e só se acerta depois do primeiro clique.
+- [ ] Dar contraste suficiente aos botões e às datas. No tema claro, o texto branco do "Entrar" e do "Criar tarefa" (3,7:1) e do "Nova Tarefa" (3,6:1) e as datas em cinza (3,1:1) ficam abaixo dos 4,5:1 do WCAG AA. No escuro, o ícone branco da lixeira fica em 2,8:1.
+- [ ] Atualizar o `SGT/README.md`, que repete parte deste e ainda diz que a paleta tem contraste AAA.
+- [ ] Dizer "Essa tarefa já está concluída" em vez de "Tarefa não encontrada." quando a mesma tarefa é concluída duas vezes, por exemplo em duas abas. O MySQL só conta as linhas que mudaram, e a segunda vez não muda nada.
+- [ ] Sair por POST, com token CSRF: hoje o `logout.php` aceita GET, então um link em outro site consegue deslogar quem estiver usando o app.
+- [ ] Uma tela para trocar a senha, já que o `seed.php` pede para trocar a `123456` depois do primeiro login e não há onde fazer isso, e uma tela de cadastro.
+- [ ] Tirar da tela de login os números "100%" e "<1s Resposta do painel", que não vêm de nenhuma medição.
+- [ ] Busca sem acento: hoje "relatorio" não encontra "relatório".
+- [ ] Testes automatizados (PHPUnit) do isolamento entre usuários e do CSRF, e uma CI no GitHub Actions que rode o `php -l` e esses testes.
+
+## Autor
+
+Isaac Gomes de Moraes · [LinkedIn](https://www.linkedin.com/in/isaacgomesmoraes/) · [e-mail](mailto:isaacgm260653@gmail.com) · [GitHub](https://github.com/IsaacGomes260653)
+
+## Licença
+
+O código está sob a licença [MIT](LICENSE). A fonte Plus Jakarta Sans vem do Google Fonts, sob a SIL Open Font License.
