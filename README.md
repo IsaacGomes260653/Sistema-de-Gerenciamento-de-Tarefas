@@ -63,3 +63,28 @@ Abra <http://localhost:8000> e entre com o usuário `admin` e a senha `123456`. 
 - Sem o `.env`, o app usa os mesmos valores do `.env.example`: `localhost`, banco `tarefas`, usuário `root` sem senha.
 - Se aparecer "Não foi possível conectar ao banco de dados", o MySQL está desligado, a senha está errada ou falta o `pdo_mysql` no PHP (confira com `php -m`). O motivo exato sai no terminal do `php -S`.
 - Não há tela de cadastro: o `seed.php` cria só o `admin`. Para testar com uma segunda pessoa, gere o hash da senha com `php -r "echo password_hash('outra123', PASSWORD_DEFAULT);"`, entre no banco com `mysql -u root -p tarefas` e, já dentro dele, rode `INSERT INTO usuarios (usuario, senha) VALUES ('maria', 'o hash gerado');`. Cole o hash no prompt do `mysql`, e não num comando do terminal: ele tem vários `$`, que o Bash e o PowerShell tentariam trocar por variáveis.
+
+## O que ele faz
+
+- **Login com usuário e senha.** A senha é conferida com `password_verify` contra o hash bcrypt guardado no banco. O botão de olho mostra e esconde o que foi digitado. Errou, aparece "Usuário ou senha incorretos."; depois de cinco erros seguidos, o login fica bloqueado por um minuto.
+- **Painel com três contadores:** total de tarefas, pendentes e concluídas, contados no servidor a cada carregamento.
+- **Criar e editar.** Título obrigatório (até 255 caracteres), descrição opcional (até 2000, com contador ao vivo) e status Pendente ou Concluída. A validação é feita no servidor, e o erro aparece embaixo do campo. Pela edição, uma tarefa concluída pode voltar a ser pendente.
+- **Concluir com um clique.** O botão de concluir só aparece nas pendentes.
+- **Excluir com confirmação.** Uma janela própria, com o título da tarefa, pergunta antes de apagar. Ela fecha com Cancelar, com Esc ou com um clique fora.
+- **Busca e filtro sem recarregar a página.** A busca olha o título e a descrição, sem diferença entre maiúsculas e minúsculas, e os filtros separam Todas, Pendentes e Concluídas. Se nada combina, aparece "Nada encontrado".
+- **Aviso depois de cada ação** ("Tarefa criada com sucesso.", "Tarefa excluída."), que some sozinho em 4,5 segundos ou no X.
+- **Tema claro e escuro.** Na primeira visita, segue o tema do sistema. O botão troca, e a escolha fica salva no navegador.
+- **Celular.** Abaixo de 760 px de largura, a tabela vira cartões, com os mesmos botões.
+
+### Segurança
+
+O que mais trabalhei neste projeto foi garantir que uma pessoa logada não consiga mexer nas tarefas de outra.
+
+- **O dono está em todas as consultas.** Todo SQL de tarefa usa o `usuario_id` da sessão, nunca um que venha do formulário: no `WHERE` de quem lista, abre para editar, salva, conclui e exclui, e no `INSERT` de quem cria. Uma tarefa de outra pessoa recebe a mesma resposta de uma que não existe: "Tarefa não encontrada."
+- **Token CSRF em todo formulário que muda algo:** login, criar, editar, concluir e excluir. Sem o token certo, a resposta é o status 419.
+- **Concluir e excluir só por POST.** Um GET nessas rotas só volta para o painel.
+- **Consultas preparadas** com PDO e a emulação desligada, então o valor nunca é colado no texto do SQL.
+- **Saída escapada.** Tudo o que vai para a página passa pela função `e()`, que usa o `htmlspecialchars`.
+- **Sessão protegida.** Cookie `HttpOnly` e `SameSite=Lax` (e `Secure` quando há HTTPS), id da sessão trocado no login e cookie apagado no logout.
+- **Cabeçalhos** `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` e `Referrer-Policy`.
+- **Senha do banco fora do Git.** As credenciais ficam no `.env`, que está no `.gitignore`. Com `APP_ENV` diferente de `local`, os erros vão para `storage/php-error.log` e não aparecem na tela.
