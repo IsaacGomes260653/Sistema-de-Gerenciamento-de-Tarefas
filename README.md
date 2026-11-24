@@ -103,25 +103,11 @@ O que mais trabalhei neste projeto foi garantir que uma pessoa logada não consi
 | Plus Jakarta Sans, do Google Fonts | É a única coisa que vem de fora. Sem internet, a página usa a fonte do sistema. |
 
 ```mermaid
-flowchart LR
-    N["Navegador"]
-    subgraph paginas["Páginas: GET"]
-        direction TB
-        L["index.php<br/>login"]
-        P["tarefas/index.php<br/>painel"]
-        F["tarefas/form.php<br/>criar e editar"]
-    end
-    subgraph acoes["Ações: POST com token CSRF"]
-        direction TB
-        LG["logar.php"]
-        S["tarefas/form.php<br/>salvar"]
-        C["tarefas/concluir.php"]
-        X["tarefas/excluir.php"]
-    end
-    N --> paginas
-    N --> acoes
-    paginas --> B["config/config.php<br/>.env, sessão,<br/>cabeçalhos e PDO"]
-    acoes --> B
+flowchart TB
+    N["Navegador"] -->|"GET"| P["Páginas<br/>index.php: login<br/>tarefas/index.php: painel<br/>tarefas/form.php: edição"]
+    N -->|"POST com token CSRF"| A["Ações<br/>logar.php<br/>tarefas/form.php: salvar<br/>tarefas/concluir.php<br/>tarefas/excluir.php"]
+    P --> B["config/config.php<br/>.env e sessão<br/>cabeçalhos e PDO"]
+    A --> B
     B -->|"SQL com o usuario_id<br/>da sessão"| D[("MySQL<br/>usuarios e tarefas")]
 ```
 
