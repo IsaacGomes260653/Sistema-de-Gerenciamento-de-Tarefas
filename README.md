@@ -88,3 +88,94 @@ O que mais trabalhei neste projeto foi garantir que uma pessoa logada não consi
 - **Sessão protegida.** Cookie `HttpOnly` e `SameSite=Lax` (e `Secure` quando há HTTPS), id da sessão trocado no login e cookie apagado no logout.
 - **Cabeçalhos** `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` e `Referrer-Policy`.
 - **Senha do banco fora do Git.** As credenciais ficam no `.env`, que está no `.gitignore`. Com `APP_ENV` diferente de `local`, os erros vão para `storage/php-error.log` e não aparecem na tela.
+
+## Como foi feito
+
+| Escolha | Por quê |
+|---|---|
+| PHP 8.1 ou mais novo, sem framework | São três telas e quatro ações. Cada página é um arquivo `.php` que começa incluindo o `config/config.php`, então dá para seguir um pedido do começo ao fim sem camadas no meio. O 8.1 é o mínimo por causa do tipo `never` no `redirect()`. |
+| MySQL ou MariaDB, pelo PDO | Consultas preparadas, erro como exceção e uma chave estrangeira com `ON DELETE CASCADE`: apagar um usuário apaga as tarefas dele. O índice em `(usuario_id, status)` atende o filtro que toda consulta faz. |
+| Sessões do próprio PHP | O login não precisa de biblioteca: quem está logado é o `usuario_id` guardado na sessão. |
+| `.env` lido pelo `config/env.php` | São 32 linhas no lugar do Composer, então não há dependência nenhuma para instalar. |
+| CSS próprio, com variáveis no `tokens.css` | Cores, espaços, cantos e tempos de animação ficam num arquivo só. O tema escuro só troca as variáveis, e as animações quase somem com o `prefers-reduced-motion`. |
+| JavaScript sem biblioteca (`app.js`) | Tema, avisos, janela de confirmação, contador, mostrar a senha, busca e filtro. A lista já vem inteira do servidor, então filtrar no navegador é instantâneo. |
+| Ícones em SVG no `icons.php` | Sem fonte de ícones e sem pedido a outro servidor. A cor segue o texto (`currentColor`). |
+| Plus Jakarta Sans, do Google Fonts | É a única coisa que vem de fora. Sem internet, a página usa a fonte do sistema. |
+
+```mermaid
+flowchart LR
+    N["Navegador"]
+    subgraph paginas["Páginas: GET"]
+        direction TB
+        L["index.php<br/>login"]
+        P["tarefas/index.php<br/>painel"]
+        F["tarefas/form.php<br/>criar e editar"]
+    end
+    subgraph acoes["Ações: POST com token CSRF"]
+        direction TB
+        LG["logar.php"]
+        S["tarefas/form.php<br/>salvar"]
+        C["tarefas/concluir.php"]
+        X["tarefas/excluir.php"]
+    end
+    N --> paginas
+    N --> acoes
+    paginas --> B["config/config.php<br/>.env, sessão,<br/>cabeçalhos e PDO"]
+    acoes --> B
+    B -->|"SQL com o usuario_id<br/>da sessão"| D[("MySQL<br/>usuarios e tarefas")]
+```
+
+Cada ação confere o token, grava no banco filtrando pelo dono, guarda um aviso na sessão e redireciona para o painel. O painel mostra o aviso uma vez e o apaga. Como toda ação termina num redirecionamento, recarregar a página depois de salvar não cria a tarefa de novo.
+
+### Decisões técnicas e o que eu aprendi
+
+- **De onde ele veio.** A primeira versão, de maio de 2026, guardava a senha em MD5, gerada pelo próprio `banco.sql`, e o `excluir.php` apagava por GET qualquer id (`DELETE FROM tarefas WHERE id = :id`), sem olhar de quem era. Logado, bastava trocar o número na URL para apagar a tarefa de outra pessoa. Em setembro reescrevi o projeto em cima desses dois problemas.
+- **O hash da senha sai do PHP.** O `MD5('123456')` saiu do `banco.sql`. O `admin` agora é criado pelo `database/seed.php` com o `password_hash`, porque o bcrypt não existe no SQL.
+- **A checagem fica na consulta, não na tela.** Esconder um botão não protege nada. O que protege é o `usuario_id` no `WHERE`, e por isso testei com um segundo usuário tentando abrir, editar, concluir e excluir as tarefas do primeiro.
+- **O endereço base é calculado.** O `config.php` compara a pasta do app com o `DOCUMENT_ROOT` do servidor e monta o `BASE_URL`. O mesmo código funciona em `http://localhost:8000` e em `http://localhost/SGT`.
+- **O tema não pisca.** Um script curto no `<head>` lê o tema salvo (ou o do sistema) antes de a página ser desenhada. Sem ele, quem usa o tema escuro veria um clarão branco a cada página.
+- **Duas listas, um filtro.** O PHP gera a tabela do computador e os cartões do celular ao mesmo tempo, a partir de `_task-row.php` e `_task-card.php`, e o CSS mostra uma das duas. A busca e o filtro passam pelas duas, com o mesmo atributo `data-task-row`.
+- **Uma janela própria no lugar do `confirm()`.** O envio do formulário de excluir é segurado até a confirmação, e aí o `requestSubmit()` envia de verdade. O botão só mostra "Salvando…" nesse segundo envio, e não enquanto a janela ainda está aberta.
+- **O bloqueio do login tem limite.** As tentativas são contadas na sessão. Isso atrapalha quem erra a senha no navegador, mas quem apaga o cookie recomeça do zero. Testei, e ficou nos próximos passos.
+
+<details>
+<summary>Estrutura de pastas</summary>
+
+```
+.
+├── SGT/                          # o app
+│   ├── index.php                 # tela de login
+│   ├── logar.php                 # confere a senha, o token e as tentativas
+│   ├── logout.php                # apaga a sessão e o cookie
+│   ├── banco.sql                 # cria o banco tarefas e as tabelas usuarios e tarefas
+│   ├── .env.example              # credenciais do banco e APP_ENV
+│   ├── config/
+│   │   ├── config.php            # incluído por toda página: sessão, cabeçalhos e BASE_URL
+│   │   ├── database.php          # conexão PDO
+│   │   └── env.php               # leitor do .env
+│   ├── database/
+│   │   └── seed.php              # cria o usuário admin com a senha em bcrypt
+│   ├── includes/
+│   │   ├── auth.php              # require_login() e o usuário da sessão
+│   │   ├── csrf.php              # gera e confere o token
+│   │   ├── helpers.php           # e(), redirect() e os avisos
+│   │   ├── icons.php             # ícones em SVG
+│   │   └── partials/             # head, barra do topo, avisos, janela de confirmação e scripts
+│   ├── tarefas/
+│   │   ├── index.php             # painel: contadores, busca, filtros e a lista
+│   │   ├── form.php              # criar e editar
+│   │   ├── concluir.php          # POST: marca como concluída
+│   │   ├── excluir.php           # POST: apaga
+│   │   └── _task-row.php e _task-card.php   # uma tarefa na tabela e no cartão
+│   ├── assets/
+│   │   ├── css/                  # tokens, base, componentes, login e painel
+│   │   ├── js/app.js             # tudo o que roda no navegador
+│   │   └── img/favicon.svg
+│   └── storage/                  # log de erros fora do ambiente local
+├── LICENSE
+└── .github/
+    ├── banner.svg, banner-mobile.svg e social-preview.png
+    └── capturas/                 # GIF e capturas deste README
+```
+
+</details>
