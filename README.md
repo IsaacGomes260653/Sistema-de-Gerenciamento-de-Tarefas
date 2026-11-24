@@ -217,3 +217,15 @@ Isaac Gomes de Moraes · [LinkedIn](https://www.linkedin.com/in/isaacgomesmoraes
 ## Licença
 
 O código está sob a licença [MIT](LICENSE). A fonte Plus Jakarta Sans vem do Google Fonts, sob a SIL Open Font License.
+
+---
+
+## English summary
+
+**TaskFlow** is a to-do list in PHP and MySQL with login, where each person can only see, edit and delete their own tasks. There is no live site: it runs locally, and the [demo GIF](#demonstração) shows it working (Portuguese interface).
+
+- **Tasks:** create, edit, complete and delete (with a confirmation dialog), a dashboard with total, pending and done counters, instant search and status filters, light and dark themes and a card layout on phones.
+- **Security:** every task query uses the `usuario_id` from the session, so another user's task gets the same "not found" answer as one that doesn't exist; CSRF tokens on every form that changes data; bcrypt passwords; prepared statements; escaped output; `HttpOnly` and `SameSite` session cookies; security headers.
+- **Stack:** PHP 8.1+ with no framework or Composer, MySQL or MariaDB through PDO, plain CSS with custom properties and plain JavaScript. There are no automated tests yet; the bugs found while writing this README are listed under "Próximos passos".
+
+**Run it:** with PHP 8.1+ and MySQL running, `git clone` the repository, then inside `SGT/` run `cp .env.example .env`, `mysql -u root -p -e "source banco.sql"`, `php database/seed.php` and `php -S localhost:8000`, and sign in at <http://localhost:8000> as `admin` / `123456`. Code under the [MIT](LICENSE) license.
